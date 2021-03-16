@@ -1,13 +1,23 @@
-Zombie zombie;
+Player player;
 
 void setup() {
   size(400,400);
-  zombie = new Zombie();
+  player = new Player();
 }
 
+  //------------------------------------------------------------------------------------------------------------- 
+
 void draw() {
-  zombie.display();
+  background(200);
+  player.update();
+  
+  if(player.hit()){
+    frameCount = -1;
+  }
+  
 }
+
+  //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
   
