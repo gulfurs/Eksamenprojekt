@@ -2,11 +2,14 @@ Player player;
 
 ArrayList<Point> point;
 
+int count;
+
 void setup() {
   size(400,400);
   player = new Player();
   point = new ArrayList<Point>();
   point.add(new Point());
+  count = 0;
 }
 
   //------------------------------------------------------------------------------------------------------------- 
@@ -14,26 +17,16 @@ void setup() {
 void draw() {
   background(200);
   player.update();
-  hit();
-  
-  player.zombie.limit += 0.001;
-  
-  for(int i = 0; i < point.size(); i++ ){
-    point.get(i).update();
-  }
-  
-  if(player.hit()){
-    frameCount = -1;
-  }
-  
-  println(player.zombie.limit);
-  
+  updatePoints();
+  hit(); // Tjekker om spilleren rør et point    
+  endScreen();
+  spawnPoint();
+    
 }
 
   //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
-  point.add(new Point());
 }
 
   //------------------------------------------------------------------------------------------------------------- 
@@ -44,8 +37,35 @@ void hit(){
     if(d<(point.get(i).size+player.size)*0.5){
       point.remove(i);
       if(player.zombie.limit>0){
-        player.zombie.limit -= 0.1;
+        player.zombie.limit -= 0.2;
       }
     }
+  }
+}
+
+  //------------------------------------------------------------------------------------------------------------- 
+
+void updatePoints(){
+  for(int i = 0; i < point.size(); i++ ){
+    point.get(i).update();
+  }
+}
+
+  //------------------------------------------------------------------------------------------------------------- 
+
+void endScreen(){
+  if(player.hit()){
+    frameCount = -1;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------------------
+
+void spawnPoint(){
+  if(count > 300){
+    point.add(new Point());
+    count = 0;
+  } else {
+    count++;
   }
 }

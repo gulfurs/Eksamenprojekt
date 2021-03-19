@@ -14,7 +14,7 @@ class Zombie{
     limit = 0.2;
    
     pos = new PVector(x,y);
-    vel = new PVector(0,0);
+    vel = new PVector(limit,limit);
     acc = new PVector(0,0);
   
   }

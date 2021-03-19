@@ -7,7 +7,6 @@ class Player{
   PVector acc;
   
   int size;
-
   
   Player(){
     zombie = new Zombie(0,0);
@@ -23,6 +22,7 @@ class Player{
   //------------------------------------------------------------------------------------------------------------- 
   
   void update(){
+    zombie.limit += 0.001;
     display();
     move();
   }
