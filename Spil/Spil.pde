@@ -10,6 +10,7 @@ void setup() {
   point = new ArrayList<Point>();
   point.add(new Point());
   count = 0;
+  
 }
 
   //------------------------------------------------------------------------------------------------------------- 
@@ -21,6 +22,16 @@ void draw() {
   hit(); // Tjekker om spilleren rør et point    
   endScreen();
   spawnPoint();
+   
+    /*
+  if(//rammer et point){
+    // regestykke kommer frem
+  } else if (// spillet er slut){
+    // slut skærm
+  } else {
+    // normale spil funktioner
+  }
+  */
     
 }
 
