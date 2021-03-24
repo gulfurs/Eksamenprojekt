@@ -22,6 +22,7 @@ class Zombie{
   //------------------------------------------------------------------------------------------------------------- 
 
   void display(){
+    text(int(limit*100),pos.x,pos.y - size);
     shapeMode(CENTER);
     triangle(pos.x,pos.y - size,pos.x-(size/2),pos.y,pos.x+(size/2),pos.y);
   }
@@ -29,6 +30,9 @@ class Zombie{
   //------------------------------------------------------------------------------------------------------------- 
 
   void move(float x, float y){
+    if(limit<0){
+      limit = 0;
+    }
     acc.add(x-pos.x,y-pos.y);
     pos.add(vel);
     vel.add(acc);

@@ -54,7 +54,7 @@ class Player{
   
   //-------------------------------------------------------------------------------------------------------------
   
-  boolean hit(){
+  boolean hit(){ // retunere true, hvis man rør zombien
     return dist(pos.x,pos.y,zombie.pos.x,zombie.pos.y)<(zombie.size+size)*0.5;
   }
   
