@@ -11,7 +11,7 @@ class Point{
   int operator;
   int result;
   
-  Point(){
+  Point(int level_){
     size = 10;
     
     pos = new PVector((int)random(size,width-size),(int)random(size,height-size));
@@ -19,7 +19,7 @@ class Point{
     valueOne = (int)random(5);
     valueTwo = (int)random(5);
     
-    operator = 0;
+    operator = level_;
     
     calResult();
     
@@ -49,7 +49,6 @@ class Point{
   //------------------------------------------------------------------------------------------------------------- 
 
   void display(){
-    textAlign(CENTER);
     text(valueOne + " " + operators[operator] + " " + valueTwo, pos.x, pos.y - size);
     rectMode(CENTER);
     rect(pos.x,pos.y,size,size);

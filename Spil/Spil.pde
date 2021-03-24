@@ -4,23 +4,35 @@ Point currentPoint;
 
 ArrayList<Point> point;
 
-int count;
+int count; // tror ikke den her bliver brugt
 
 int result;
+int level;
 
 boolean pause;
+boolean dead;
 
 char[] operators;
 
 void setup() {
   size(400, 400);
+  
+  textAlign(CENTER);
+
   player = new Player();
+  level = 0;
+
   point = new ArrayList<Point>();
-  point.add(new Point());
+  point.add(new Point(level));
+
   currentPoint = point.get(0);
-  count = 0;
   result = currentPoint.result;
+  point.remove(0);
+
+  count = 0;
   pause = true;
+  dead = false;
+
   operators = new char[4];
   operators[0] = '+';
   operators[1] = '-';
@@ -32,31 +44,27 @@ void setup() {
 
 void draw() {
 
-
-  if (pause) {
+  if (dead) {
     background(200);
-    text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.5);
+    endScreen(); // viser slut skærmen
   } else {
-    background(200);
-    text(player.score, width*0.5, height*0.5);
-    player.update();
-    updatePoints();
-    hit(); // Tjekker om spilleren rør et point    
-    endScreen();
-    spawnPoint();
+    if (pause) { // pauser spillet og viser regnestykket
+      background(200);
+      text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.5);
+    } else { // Her er koden til selve spillet
+      background(200);
+      text(player.score, width*0.5, height*0.5); // Viser spillerens score
+      player.update(); // updatere spilleren
+      updatePoints(); // updatere pointene
+      hit(); // Tjekker om spilleren rør et point    
+      spawnPoint(); // spawner point
+      level(); // ændre det level man spillet på
+      if (player.hit()) {
+        dead = true; // hvis spilleren bliver ramt af zombien så dør man
+      }
+    }
   }
-
-
-
-  /*
-  if(//rammer et point){
-   // regestykke kommer frem
-   } else if (// spillet er slut){
-   // slut skærm
-   } else {
-   // normale spil funktioner
-   }
-   */
+  
 }
 
 //------------------------------------------------------------------------------------------------------------- 
@@ -89,16 +97,14 @@ void updatePoints() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void endScreen() {
-  if (player.hit()) {
-    frameCount = -1;
-  }
+  text("Game Over!",width*0.5,height*0.5);
 }
 
 //-------------------------------------------------------------------------------------------------------------
 
 void spawnPoint() {
   if (count > 300) {
-    point.add(new Point());
+    point.add(new Point(level));
     count = 0;
   } else {
     count++;
@@ -108,13 +114,20 @@ void spawnPoint() {
 //-------------------------------------------------------------------------------------------------------------
 
 void keyPressed() {
+  
+  if(dead && key == ENTER){
+    dead = false;
+    frameCount = -1;
+  }
+  
+  
   if (pause && (int)key-48==result) {
     player.score++;
     pause = false;
     if (player.zombie.limit>0) {
       player.zombie.limit -= 0.4;
     }
-  } else if (pause && (int)key-48!=result){
+  } else if (pause && (int)key-48!=result) {
     player.score--;
     pause = false;
     player.zombie.limit += 0.2;
@@ -122,3 +135,15 @@ void keyPressed() {
 }
 
 //-------------------------------------------------------------------------------------------------------------
+
+void level(){
+  if(player.score<10){
+    level = 0;
+  } else if(player.score<25){
+    level = 1;
+  } else if(player.score<50){
+    level = 2;
+  } else {
+    level = 3;
+  }
+}
