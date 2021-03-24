@@ -5,7 +5,7 @@ ArrayList<Point> point;
 int count;
 
 void setup() {
-  size(400,400);
+  size(800,800);
   player = new Player();
   point = new ArrayList<Point>();
   point.add(new Point());
@@ -47,6 +47,7 @@ void hit(){
     float d = dist(player.pos.x,player.pos.y, point.get(i).pos.x,point.get(i).pos.y);
     if(d<(point.get(i).size+player.size)*0.5){
       point.remove(i);
+      delay(1000);
       if(player.zombie.limit>0){
         player.zombie.limit -= 0.2;
       }

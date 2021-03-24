@@ -7,7 +7,7 @@ class Point{
   int size;
   
   Point(){
-    size = 10;
+    size = 20;
     
     pos = new PVector((int)random(size,width-size),(int)random(size,height-size)); 
   }

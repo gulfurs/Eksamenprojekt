@@ -11,7 +11,7 @@ class Player{
   Player(){
     zombie = new Zombie(0,0);
     
-    size = 10;
+    size = 20;
    
     pos = new PVector(width*0.5,height*0.5);
     vel = new PVector(0,0);
@@ -39,7 +39,7 @@ class Player{
 
   void move(){
     zombie.move(pos.x,pos.y);
-    acc.add(mouseX-pos.x,mouseY-pos.y);
+    acc.add(mouseY-pos.x,mouseY-pos.y);
     pos.add(vel);
     vel.add(acc);
     acc.mult(0);
@@ -53,6 +53,12 @@ class Player{
   
   boolean hit(){
     return dist(pos.x,pos.y,zombie.pos.x,zombie.pos.y)<(zombie.size+size)*0.5;
+  }
+  
+  void edge() {
+   if (pos.x > width) {
+     pos.x *= -1;
+   }
   }
   
 }

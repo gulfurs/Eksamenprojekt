@@ -9,7 +9,7 @@ class Zombie{
   float limit;
   
   Zombie(int x, int y){
-    size = 10;
+    size = 20;
    
     limit = 0.2;
    
