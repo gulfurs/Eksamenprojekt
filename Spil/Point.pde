@@ -16,10 +16,14 @@ class Point{
     
     pos = new PVector((int)random(size,width-size),(int)random(size,height-size));
     
-    valueOne = (int)random(5);
-    valueTwo = (int)random(5);
-    
     operator = level_;
+    
+    valueOne = (int)random(11); // i stedet for 11 skal de måske have noget at gøre med tiden/level
+    valueTwo = (int)random(11); 
+    
+    if (operator==3){
+      valueOne = valueTwo*(int)random(11); 
+    }
     
     calResult();
     
@@ -35,7 +39,7 @@ class Point{
     } else if(operator==2){
       result = valueOne * valueTwo;
     } else if(operator==3){
-      result = valueOne / valueTwo;
+      result = valueOne / valueTwo; //Fejl med at dividere med 0
     }
     
   }
