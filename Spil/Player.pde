@@ -8,14 +8,17 @@ class Player{
   
   int size;
   
+  int score;
+  
   Player(){
-    zombie = new Zombie(0,0);
+   zombie = new Zombie(0,0);
     
-    size = 10;
+   size = 10;
+   score = 0;
    
-    pos = new PVector(width*0.5,height*0.5);
-    vel = new PVector(0,0);
-    acc = new PVector(0,0);
+   pos = new PVector(width*0.5,height*0.5);
+   vel = new PVector(0,0);
+   acc = new PVector(0,0);
     
   }
   
@@ -51,7 +54,7 @@ class Player{
   
   //-------------------------------------------------------------------------------------------------------------
   
-  boolean hit(){
+  boolean hit(){ // retunere true, hvis man rør zombien
     return dist(pos.x,pos.y,zombie.pos.x,zombie.pos.y)<(zombie.size+size)*0.5;
   }
   
