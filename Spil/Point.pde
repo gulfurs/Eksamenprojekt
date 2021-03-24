@@ -6,10 +6,31 @@ class Point{
   
   int size;
   
+  int valueOne;
+  int valueTwo;
+  int operator;
+  int result;
+  
   Point(){
     size = 10;
     
-    pos = new PVector((int)random(size,width-size),(int)random(size,height-size)); 
+    pos = new PVector((int)random(size,width-size),(int)random(size,height-size));
+    
+    valueOne = (int)random(5);
+    valueTwo = (int)random(5);
+    
+    operator = 0;
+    
+    calResult();
+    
+  }
+  
+  //-------------------------------------------------------------------------------------------------------------
+  
+  void calResult(){
+    if(operator==0){
+      result = valueOne + valueTwo;
+    }// hvis operator er eksempelvis 1, så skal der minusset eller ganges
   }
   
   //------------------------------------------------------------------------------------------------------------- 
@@ -21,6 +42,8 @@ class Point{
   //------------------------------------------------------------------------------------------------------------- 
 
   void display(){
+    textAlign(CENTER);
+    text(valueOne + " " + operator + " " + valueTwo, pos.x, pos.y - size);
     rectMode(CENTER);
     rect(pos.x,pos.y,size,size);
   }
