@@ -6,6 +6,7 @@ ArrayList<Point> point;
 
 int count; // tror ikke den her bliver brugt
 
+int guess;
 int result;
 int level;
 
@@ -18,9 +19,11 @@ void setup() {
   size(400, 400);
   
   textAlign(CENTER);
+  textSize(20);
 
   player = new Player();
   level = 0;
+  guess = 0;
 
   point = new ArrayList<Point>();
   point.add(new Point(level));
@@ -50,7 +53,7 @@ void draw() {
   } else {
     if (pause) { // pauser spillet og viser regnestykket
       background(200);
-      text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.5);
+      calculationScreen();
     } else { // Her er koden til selve spillet
       background(200);
       text(player.score, width*0.5, height*0.5); // Viser spillerens score
@@ -70,6 +73,16 @@ void draw() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
+  if(pause && mouseX > width*0.5){
+    println("plus");
+    guess++;
+  }
+  
+  if(pause && mouseX < width*0.5){
+    println("minus");
+    guess--;
+  }
+  
 }
 
 //------------------------------------------------------------------------------------------------------------- 
@@ -120,14 +133,23 @@ void keyPressed() {
     frameCount = -1;
   }
   
+  if(pause && keyCode == RIGHT){
+    guess++;
+  }
   
-  if (pause && (int)key-48==result) {
+  if(pause && keyCode == LEFT){
+    guess--;
+  }
+  
+  if (pause && key == ENTER && guess == result) {
+    guess = 0;
     player.score++;
     pause = false;
     if (player.zombie.limit>0) {
       player.zombie.limit -= 0.4;
     }
-  } else if (pause && (int)key-48!=result) {
+  } else if (pause && key == ENTER && guess != result) {
+    guess = 0;
     player.score--;
     pause = false;
     player.zombie.limit += 0.2;
@@ -147,3 +169,22 @@ void level(){
     level = 3;
   }
 }
+
+//-------------------------------------------------------------------------------------------------------------
+
+void calculationScreen(){
+  rectMode(CORNER);
+  noStroke();
+  fill(255,0,0,150);
+  rect(0,0,width*0.5,height);
+  fill(0,255,0,150);
+  rect(width*0.5,0,width*0.5,height);
+  fill(0);
+  stroke(0);
+  text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.25);
+  text("Gæt: " + guess, width*0.5, height*0.5);
+  text("+", width*0.75, height*0.5);
+  text("-", width*0.25, height*0.5);
+}
+
+//-------------------------------------------------------------------------------------------------------------

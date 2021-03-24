@@ -49,7 +49,7 @@ class Point{
   //------------------------------------------------------------------------------------------------------------- 
 
   void display(){
-    text(valueOne + " " + operators[operator] + " " + valueTwo, pos.x, pos.y - size);
+    text(operators[operator], pos.x, pos.y - size);
     rectMode(CENTER);
     rect(pos.x,pos.y,size,size);
   }

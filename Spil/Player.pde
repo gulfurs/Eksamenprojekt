@@ -46,7 +46,7 @@ class Player{
     pos.add(vel);
     vel.add(acc);
     acc.mult(0);
-    vel.limit(2);
+    vel.limit(3);
     if(dist(pos.x,pos.y,mouseX,mouseY)<2){
       vel.mult(0);
     }
