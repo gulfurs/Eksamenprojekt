@@ -16,7 +16,7 @@ char[] operators;
 
 void setup() {
   size(400, 400);
-  
+
   textAlign(CENTER);
   textSize(20);
 
@@ -66,20 +66,34 @@ void draw() {
       }
     }
   }
-  
 }
 
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
-  if(pause && mouseX > width*0.5){
+  if (pause && (mouseX>width*1/3 && mouseX<width*2/3 && mouseY>height*4/6 && mouseY<height*5/6)) {
+    if (guess == result) {
+      guess = 0;
+      player.score++;
+      pause = false;
+      if (player.zombie.limit>0) {
+        player.zombie.limit -= 0.30;
+      }
+    } else if (guess != result) {
+      guess = 0;
+      player.score--;
+      pause = false;
+      player.zombie.limit += 0.1;
+    }
+  }
+
+  if (pause && mouseX > width*0.5) {
     guess++;
   }
-  
-  if(pause && mouseX < width*0.5){
+
+  if (pause && mouseX < width*0.5) {
     guess--;
   }
-  
 }
 
 //------------------------------------------------------------------------------------------------------------- 
@@ -107,7 +121,7 @@ void updatePoints() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void endScreen() {
-  text("Game Over!",width*0.5,height*0.5);
+  text("Game Over!", width*0.5, height*0.5);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -124,43 +138,45 @@ void spawnPoint() {
 //-------------------------------------------------------------------------------------------------------------
 
 void keyPressed() {
-  
-  if(dead && key == ENTER){
+
+  if (dead && key == ENTER) {
     dead = false;
     frameCount = -1;
   }
-  
-  if(pause && keyCode == RIGHT){
+
+  if (pause && keyCode == RIGHT) {
     guess++;
   }
-  
-  if(pause && keyCode == LEFT){
+
+  if (pause && keyCode == LEFT) {
     guess--;
   }
-  
-  if (pause && key == ENTER && guess == result) {
-    guess = 0;
-    player.score++;
-    pause = false;
-    if (player.zombie.limit>0) {
-      player.zombie.limit -= 0.30;
+
+  if (key == ENTER && pause) {
+    if (guess == result) {
+      guess = 0;
+      player.score++;
+      pause = false;
+      if (player.zombie.limit>0) {
+        player.zombie.limit -= 0.30;
+      }
+    } else if (guess != result) {
+      guess = 0;
+      player.score--;
+      pause = false;
+      player.zombie.limit += 0.1;
     }
-  } else if (pause && key == ENTER && guess != result) {
-    guess = 0;
-    player.score--;
-    pause = false;
-    player.zombie.limit += 0.1;
   }
 }
 
 //-------------------------------------------------------------------------------------------------------------
 
-void level(){
-  if(player.score<10){
+void level() {
+  if (player.score<10) {
     level = 0;
-  } else if(player.score<25){
+  } else if (player.score<25) {
     level = 1;
-  } else if(player.score<50){
+  } else if (player.score<50) {
     level = 2;
   } else {
     level = 3;
@@ -169,19 +185,22 @@ void level(){
 
 //-------------------------------------------------------------------------------------------------------------
 
-void calculationScreen(){
+void calculationScreen() {
   rectMode(CORNER);
   noStroke();
-  fill(255,0,0,150);
-  rect(0,0,width*0.5,height);
-  fill(0,255,0,150);
-  rect(width*0.5,0,width*0.5,height);
+  fill(255, 0, 0, 150);
+  rect(0, 0, width*0.5, height);
+  fill(0, 255, 0, 150);
+  rect(width*0.5, 0, width*0.5, height);
+  fill(0, 0, 255, 150);
+  rect(width*1/3, height*4/6, width*1/3, height*1/6);
   fill(0);
   stroke(0);
   text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.25);
   text("Gæt: " + guess, width*0.5, height*0.5);
   text("+", width*0.75, height*0.5);
   text("-", width*0.25, height*0.5);
+  text("Enter",width*0.5,height*0.76);
 }
 
 //-------------------------------------------------------------------------------------------------------------
