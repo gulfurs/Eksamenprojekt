@@ -14,7 +14,7 @@ class Player{
    zombie = new Zombie(0,0);
     
    size = 10;
-   score = 50;
+   score = 0;
    
    pos = new PVector(width*0.5,height*0.5);
    vel = new PVector(0,0);
