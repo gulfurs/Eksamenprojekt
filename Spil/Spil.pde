@@ -4,8 +4,7 @@ Point currentPoint;
 
 ArrayList<Point> point;
 
-int count; // tror ikke den her bliver brugt
-
+int count;
 int guess;
 int result;
 int level;
@@ -74,12 +73,10 @@ void draw() {
 
 void mousePressed() {
   if(pause && mouseX > width*0.5){
-    println("plus");
     guess++;
   }
   
   if(pause && mouseX < width*0.5){
-    println("minus");
     guess--;
   }
   
@@ -146,13 +143,13 @@ void keyPressed() {
     player.score++;
     pause = false;
     if (player.zombie.limit>0) {
-      player.zombie.limit -= 0.4;
+      player.zombie.limit -= 0.30;
     }
   } else if (pause && key == ENTER && guess != result) {
     guess = 0;
     player.score--;
     pause = false;
-    player.zombie.limit += 0.2;
+    player.zombie.limit += 0.1;
   }
 }
 
