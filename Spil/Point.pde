@@ -30,7 +30,14 @@ class Point{
   void calResult(){
     if(operator==0){
       result = valueOne + valueTwo;
-    }// hvis operator er eksempelvis 1, så skal der minusset eller ganges
+    } else if(operator==1){
+      result = valueOne - valueTwo;
+    } else if(operator==2){
+      result = valueOne * valueTwo;
+    } else if(operator==3){
+      result = valueOne / valueTwo;
+    }
+    
   }
   
   //------------------------------------------------------------------------------------------------------------- 
@@ -43,7 +50,7 @@ class Point{
 
   void display(){
     textAlign(CENTER);
-    text(valueOne + " " + operator + " " + valueTwo, pos.x, pos.y - size);
+    text(valueOne + " " + operators[operator] + " " + valueTwo, pos.x, pos.y - size);
     rectMode(CENTER);
     rect(pos.x,pos.y,size,size);
   }

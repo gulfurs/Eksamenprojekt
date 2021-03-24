@@ -1,6 +1,7 @@
 Player player;
 
 Point currentPoint;
+
 ArrayList<Point> point;
 
 int count;
@@ -8,6 +9,8 @@ int count;
 int result;
 
 boolean pause;
+
+char[] operators;
 
 void setup() {
   size(400, 400);
@@ -18,6 +21,11 @@ void setup() {
   count = 0;
   result = currentPoint.result;
   pause = true;
+  operators = new char[4];
+  operators[0] = '+';
+  operators[1] = '-';
+  operators[2] = '*';
+  operators[3] = '/';
 }
 
 //------------------------------------------------------------------------------------------------------------- 
@@ -27,7 +35,7 @@ void draw() {
 
   if (pause) {
     background(200);
-    text(currentPoint.valueOne + " " + currentPoint.operator + " " + currentPoint.valueTwo, width*0.5, height*0.5);
+    text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.5);
   } else {
     background(200);
     text(player.score, width*0.5, height*0.5);
