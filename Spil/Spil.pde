@@ -71,6 +71,12 @@ void draw() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
+  
+  if(dead){
+    dead = false;
+    frameCount = -1;
+  }
+  
   if (pause && (mouseX>width*1/3 && mouseX<width*2/3 && mouseY>height*4/6 && mouseY<height*5/6)) {
     if (guess == result) {
       guess = 0;
