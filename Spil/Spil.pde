@@ -8,9 +8,11 @@ int count;
 int guess;
 int result;
 int level;
+int breakTime;
 
 boolean pause;
 boolean dead;
+boolean inGame;
 
 char[] operators;
 
@@ -32,7 +34,9 @@ void setup() {
   point.remove(0);
 
   count = 0;
+  breakTime = 1000;
   pause = true;
+  inGame = true;
   dead = false;
 
   operators = new char[4];
@@ -45,14 +49,29 @@ void setup() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void draw() {
-
+  background(200);
   if (dead) {
-    background(200);
+    
     endScreen(); // viser slut skærmen
   } else {
     if (pause) { // pauser spillet og viser regnestykket
-      background(200);
-      calculationScreen();
+      if (inGame) {
+        background(200);
+        calculationScreen();
+      } else {
+        //pause skærm
+      }
+
+      breakTime--;
+
+      text((int)map(breakTime,0,1000,0,10),width*0.2,height*0.2);
+
+      if (breakTime<0) {
+        pause = false;
+        inGame = true;
+        breakTime = 1000;
+      }
+      
     } else { // Her er koden til selve spillet
       background(200);
       text(player.score, width*0.5, height*0.5); // Viser spillerens score
@@ -72,11 +91,11 @@ void draw() {
 
 void mousePressed() {
   
-  if(dead){
+  if (dead) {
     dead = false;
     frameCount = -1;
   }
-  
+
   if (pause && (mouseX>width*1/3 && mouseX<width*2/3 && mouseY>height*4/6 && mouseY<height*5/6)) {
     if (guess == result) {
       guess = 0;
@@ -144,7 +163,13 @@ void spawnPoint() {
 //-------------------------------------------------------------------------------------------------------------
 
 void keyPressed() {
-
+  
+  if(key == 'p' || key == 'P'){
+    println("p");
+    pause = true;
+    inGame = false;
+  } 
+  
   if (dead && key == ENTER) {
     dead = false;
     frameCount = -1;
@@ -192,29 +217,38 @@ void level() {
 //-------------------------------------------------------------------------------------------------------------
 
 void calculationScreen() {
+  
   rectMode(CORNER);
   noStroke();
-  //Rød 4kant
+  
+  //Rød firkant
   fill(255, 0, 0, 150);
   rect(0, 0, width*0.5, height);
-  //Grøn 4kant
+  
+  //Grøn firkant
   fill(0, 255, 0, 150);
   rect(width*0.5, 0, width*0.5, height);
-  //Blå 4kant
+  
+  //Blå firkant
   fill(0, 0, 255, 150);
   rect(width*1/3, height*4/6, width*1/3, height*1/6);
-  //Hvid 4kant
+  
+  //Hvid firkant
   fill(255);
   rect(width*1/3, height*1/6, width*1/3, height*1/6);
-  fill(0);
+  
+  fill(0); //Tilbage til sort
   stroke(0);
   strokeWeight(5);
   text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.27);
   text("Gæt: " + guess, width*0.5, height*0.5);
   text("+", width*0.75, height*0.5);
   text("-", width*0.25, height*0.5);
-  text("Enter",width*0.5,height*0.76);
- 
+  text("Enter", width*0.5, height*0.76);
 }
+
+//-------------------------------------------------------------------------------------------------------------
+
+
 
 //-------------------------------------------------------------------------------------------------------------
