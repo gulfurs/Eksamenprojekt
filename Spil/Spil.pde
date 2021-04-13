@@ -194,19 +194,27 @@ void level() {
 void calculationScreen() {
   rectMode(CORNER);
   noStroke();
+  //Rød 4kant
   fill(255, 0, 0, 150);
   rect(0, 0, width*0.5, height);
+  //Grøn 4kant
   fill(0, 255, 0, 150);
   rect(width*0.5, 0, width*0.5, height);
+  //Blå 4kant
   fill(0, 0, 255, 150);
   rect(width*1/3, height*4/6, width*1/3, height*1/6);
+  //Hvid 4kant
+  fill(255);
+  rect(width*1/3, height*1/6, width*1/3, height*1/6);
   fill(0);
   stroke(0);
-  text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.25);
+  strokeWeight(5);
+  text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.27);
   text("Gæt: " + guess, width*0.5, height*0.5);
   text("+", width*0.75, height*0.5);
   text("-", width*0.25, height*0.5);
   text("Enter",width*0.5,height*0.76);
+ 
 }
 
 //-------------------------------------------------------------------------------------------------------------
