@@ -18,11 +18,11 @@ class Point{
     
     operator = level_;
     
-    valueOne = (int)random(11); // i stedet for 11 skal de måske have noget at gøre med tiden/level
-    valueTwo = (int)random(11); 
+    valueOne = (int)random(1,11); // i stedet for 11 skal de måske have noget at gøre med tiden/level
+    valueTwo = (int)random(1,11); 
     
     if (operator==3){
-      valueOne = valueTwo*(int)random(11); 
+      valueOne = valueTwo*(int)random(1,11);
     }
     
     calResult();
