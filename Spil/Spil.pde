@@ -1,45 +1,47 @@
-Player player;
+Player player; // Spilleren
 
-Point currentPoint;
+Point currentPoint; // Pointet/regnestykket man er i gang med at løse
 
-ArrayList<Point> point;
+ArrayList<Point> point; // Liste over de point/regnestykker der er på banen
 
-int count;
-int guess;
-int result;
-int level;
-int breakTime;
+int count; // Bliver brugt til at spawne regnestykker
+int guess; // Det tal man gætter på når man skal regne et regnestykke
+int result; // Resultatet af regnestykket
+int level; // Det level man er på(+, -, * eller /)
+int breakTime; // Pausetiden (ca. 10 sek)
 
-boolean pause;
-boolean dead;
-boolean inGame;
+boolean pause; // Bestemmer om der er pause fra spillet
+boolean dead; // Bestemmer om man er død
+boolean inGame; // Bestemmer om man er i gang med spillet
 
-char[] operators;
+char[] operators; // +, -, * eller /
 
 void setup() {
-  size(400, 400);
+  size(400, 400); // Størrelsen af vinduet
 
-  textAlign(CENTER);
-  textSize(20);
+  textAlign(CENTER,CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
+  textSize(20); // Størrelse af teksten
 
-  player = new Player();
-  level = 0;
-  guess = 0;
+  player = new Player(); // Initialisering af spilleren
+  level = 0; // Nulstil level
+  guess = 0; // Nulstil guess
+  count = 0; // Nulstil count
 
-  point = new ArrayList<Point>();
-  point.add(new Point(level));
 
-  currentPoint = point.get(0);
-  result = currentPoint.result;
-  point.remove(0);
+  point = new ArrayList<Point>(); // Initialisering af point listen
+  point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
 
-  count = 0;
-  breakTime = 1000;
-  pause = true;
+  currentPoint = point.get(0); // Sætter currentPoint til at være det første point/regnestykke
+  result = currentPoint.result; // Initialisering af result
+  point.remove(0); // Fjerner point/regnestykke fra listen
+
+  breakTime = 1000; // Initialisering af breakTime til 1000 
+  
+  pause = true; // 
   inGame = true;
   dead = false;
 
-  operators = new char[4];
+  operators = new char[4]; // Initialisering af de fire forskellige operators
   operators[0] = '+';
   operators[1] = '-';
   operators[2] = '*';
@@ -49,22 +51,29 @@ void setup() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void draw() {
-  background(200);
-  if (dead) {
+  background(200); // Sætter baggrund
+  
+  
+  
+  if (dead) {           // Hvis spilleren er død
+  
+    endScreen();        // Viser slut skærmen
     
-    endScreen(); // viser slut skærmen
-  } else {
-    if (pause) { // pauser spillet og viser regnestykket
-      if (inGame) {
-        background(200);
+  } else {              // Hvis spilleren er i live
+  
+    if (pause) {        // Pauser spillet og viser regnestykket // Hvis spillet er på pause
+    
+      if (inGame) {     // Hvis man er inden i spillet
+      
         calculationScreen();
+        
       } else {
-        //pause skærm
+                       //pause skærm
       }
 
-      breakTime--;
+      breakTime--;     // Nedsætting af pausetid
 
-      text((int)map(breakTime,0,1000,0,10),width*0.2,height*0.2);
+      text((int)map(breakTime,0,1000,0,10),width*0.2,height*0.2); // Display af tid til pausen slutter
 
       if (breakTime<0) {
         pause = false;
@@ -72,16 +81,17 @@ void draw() {
         breakTime = 1000;
       }
       
-    } else { // Her er koden til selve spillet
+      
+    } else {           // Her er koden til selve spillet
       background(200);
       text(player.score, width*0.5, height*0.5); // Viser spillerens score
-      player.update(); // updatere spilleren
-      updatePoints(); // updatere pointene
-      hit(); // Tjekker om spilleren rør et point    
-      spawnPoint(); // spawner point
-      level(); // ændre det level man spillet på
+      player.update(); // updaterer spilleren
+      updatePoints();  // updaterer pointene
+      hit();           // Tjekker om spilleren rør et point    
+      spawnPoint();    // spawner point
+      level();         // ændre det level man spillet på
       if (player.hit()) {
-        dead = true; // hvis spilleren bliver ramt af zombien så dør man
+        dead = true;   // hvis spilleren bliver ramt af zombien så dør man
       }
     }
   }
