@@ -18,7 +18,7 @@ class Point{
     
     operator = level_;
     
-    valueOne = (int)random(1,11); // i stedet for 11 skal de måske have noget at gøre med tiden/level
+    valueOne = (int)random(1,11);
     valueTwo = (int)random(1,11); 
     
     if (operator==3){
@@ -53,7 +53,7 @@ class Point{
   //------------------------------------------------------------------------------------------------------------- 
 
   void display(){
-    text(operators[operator], pos.x, pos.y - size);
+    text(operators[operator], pos.x, pos.y - size*2);
     rectMode(CENTER);
     rect(pos.x,pos.y,size,size);
   }

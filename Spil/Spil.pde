@@ -4,11 +4,15 @@ Point currentPoint; // Pointet/regnestykket man er i gang med at løse
 
 ArrayList<Point> point; // Liste over de point/regnestykker der er på banen
 
+PImage lakeImage;
+
 int count; // Bliver brugt til at spawne regnestykker
 int guess; // Det tal man gætter på når man skal regne et regnestykke
 int result; // Resultatet af regnestykket
 int level; // Det level man er på(+, -, * eller /)
 int breakTime; // Pausetiden (ca. 10 sek)
+int lakeSize;
+
 
 boolean pause; // Bestemmer om der er pause fra spillet
 boolean dead; // Bestemmer om man er død
@@ -16,17 +20,25 @@ boolean inGame; // Bestemmer om man er i gang med spillet
 
 char[] operators; // +, -, * eller /
 
+PVector lake;
+PVector axisX;
+
 void setup() {
   size(400, 400); // Størrelsen af vinduet
 
   textAlign(CENTER, CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
   textSize(20); // Størrelse af teksten
+  imageMode(CENTER);
+ 
+  lakeImage = loadImage("data/Lake.png");
 
   player = new Player(); // Initialisering af spilleren
   level = 0; // Nulstil level
   guess = 0; // Nulstil guess
   count = 0; // Nulstil count
 
+  lake = new PVector(player.zombie.pos.x,player.zombie.pos.y);
+  axisX = new PVector(1,0);
 
   point = new ArrayList<Point>(); // Initialisering af point listen
   point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
@@ -36,6 +48,7 @@ void setup() {
   point.remove(0); // Fjerner point/regnestykke fra listen
 
   breakTime = 1000; // Initialisering af breakTime til 1000 
+  lakeSize = int(random((width*0.1+height*0.1),(width*0.4+height*0.4)));
 
   pause = true; // 
   inGame = true;
@@ -80,6 +93,7 @@ void draw() {
       }
     } else {           // Her er koden til selve spillet
       background(200);
+      slowZone();
       text(player.score, width*0.5, height*0.5); // Viser spillerens score
       player.update(); // updaterer spilleren
       updatePoints();  // updaterer pointene
@@ -195,12 +209,10 @@ void keyPressed() {
     if (key == ENTER && pause) {
       if (guess == result) {
         player.score++;
-        if (player.zombie.limit>0) {
-          player.zombie.limit -= 0.30;
-        }
+        player.zombie.noLimit *= 0.70;
       } else if (guess != result) {
         player.score--;
-        player.zombie.limit += 0.1;
+        player.zombie.noLimit *= 1.1;
       }
       mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
       mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
@@ -249,7 +261,6 @@ void calculationScreen() {
 
   fill(0); //Tilbage til sort
   stroke(0);
-  strokeWeight(5);
   text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.27);
   text("Gæt: " + guess, width*0.5, height*0.5);
   text("+", width*0.75, height*0.5);
@@ -259,6 +270,22 @@ void calculationScreen() {
 
 //-------------------------------------------------------------------------------------------------------------
 
-
+void slowZone(){
+  float d = dist(lake.x,lake.y,player.pos.x,player.pos.y);
+  noFill();
+  image(lakeImage,lake.x,lake.y,lakeSize,lakeSize);
+  if(d < lakeSize*0.5 + player.size*0.5){
+    player.inMud = true;
+  } else {
+    player.inMud = false;
+  } 
+  
+  if(d < lakeSize*0.5 + player.zombie.size*0.5){
+    player.zombie.inMud = true;
+  } else {
+    player.zombie.inMud = false;
+  }
+  
+}
 
 //-------------------------------------------------------------------------------------------------------------
