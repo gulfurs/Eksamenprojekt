@@ -83,7 +83,7 @@ void draw() {
         updatePoints();  // Updaterer pointene
         textSize(100);
         text("Pause", width*0.5, height*0.2); // Viser spillerens score
-        textSize(20);
+        textSize(40);
         text(player.score, width*0.5, height*0.5); // Viser spillerens score
         text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens score
       }
@@ -107,7 +107,9 @@ void draw() {
     } else {           // Her er koden til selve spillet
       image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
       slowZone();
-      text(player.score, width*0.5, height*0.5); // Viser spillerens score
+      fill(200);
+      textSize(100);
+      text(player.score, width*0.5, height*0.8,100); // Viser spillerens score
       player.update(); // updaterer spilleren
       updatePoints();  // updaterer pointene
       hit();           // Tjekker om spilleren rør et point    
@@ -141,6 +143,7 @@ void mousePressed() {
       }
       guess = 0; // Nulstil guess
       pause = false; // Pausen sutter
+      breakTime = 1000;
     }
 
     if (pause && mouseX > width*0.5) { // Hvis pause of klik til højre
@@ -237,6 +240,7 @@ void keyPressed() {
       mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
       pause = false;
       guess = 0;
+      breakTime = 1000;
     }
   }
 }
