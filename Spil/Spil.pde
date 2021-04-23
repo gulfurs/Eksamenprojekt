@@ -5,13 +5,14 @@ Point currentPoint; // Pointet/regnestykket man er i gang med at løse
 ArrayList<Point> point; // Liste over de point/regnestykker der er på banen
 
 PImage lakeImage;
+PImage background;
 
 int count; // Bliver brugt til at spawne regnestykker
 int guess; // Det tal man gætter på når man skal regne et regnestykke
 int result; // Resultatet af regnestykket
 int level; // Det level man er på(+, -, * eller /)
 int breakTime; // Pausetiden (ca. 10 sek)
-int lakeSize;
+int lakeSize; // Størrelsen af søen
 
 
 boolean pause; // Bestemmer om der er pause fra spillet
@@ -31,6 +32,7 @@ void setup() {
   imageMode(CENTER);
  
   lakeImage = loadImage("data/Lake.png");
+  background = loadImage("data/Background.png");
 
   player = new Player(); // Initialisering af spilleren
   level = 0; // Nulstil level
@@ -64,9 +66,6 @@ void setup() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void draw() {
-  background(200); // Sætter baggrund
-
-
 
   if (dead) {           // Hvis spilleren er død
 
@@ -76,15 +75,30 @@ void draw() {
     if (pause) {        // Pauser spillet og viser regnestykket // Hvis spillet er på pause
 
       if (inGame) {     // Hvis man er inden i spillet
-
         calculationScreen();
-      } else {
-        //pause skærm
+      } else { // pause skærm
+        image(background,width*0.5,height*0.5,width,height); // Sætter baggrund
+        slowZone(); // viser søen
+        player.display(); // Viser spilleren
+        player.zombie.display(); // Viser zombien
+        updatePoints();  // Updaterer pointene
+        textSize(100);
+        text("Pause" , width*0.5, height*0.2); // Viser spillerens score
+        textSize(20);
+        text(player.score, width*0.5, height*0.5); // Viser spillerens score
+        text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens score
       }
 
       breakTime--;     // Nedsætting af pausetid
 
-      text((int)map(breakTime, 0, 1000, 0, 10), width*0.2, height*0.2); // Display af tid til pausen slutter
+      noStroke();
+      fill(255);
+      rectMode(CORNER);
+      rect(width*0.836, height*0.85,50,50,10);
+      fill(0);
+      textSize(50);
+      text((int)map(breakTime, 0, 1000, 0, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
+      textSize(20);
 
       if (breakTime<0) {
         pause = false;
@@ -92,7 +106,7 @@ void draw() {
         breakTime = 1000;
       }
     } else {           // Her er koden til selve spillet
-      background(200);
+      image(background,width*0.5,height*0.5,width,height); // Sætter baggrund
       slowZone();
       text(player.score, width*0.5, height*0.5); // Viser spillerens score
       player.update(); // updaterer spilleren
@@ -188,8 +202,12 @@ void spawnPoint() {
 void keyPressed() {
 
   if (key == 'p' || key == 'P') { // Der trykkes på p og Spillet pauses
-    pause = true;
-    inGame = false;
+    if(pause && !inGame){ // Hvis man allerede er på pause
+      breakTime = 10;
+    } else {
+      pause = true;
+      inGame = false;    
+    }
   } 
 
   if (dead && key == ENTER) {
@@ -271,16 +289,17 @@ void calculationScreen() {
 //-------------------------------------------------------------------------------------------------------------
 
 void slowZone(){
-  float d = dist(lake.x,lake.y,player.pos.x,player.pos.y);
+  float distPlayer = dist(lake.x,lake.y,player.pos.x,player.pos.y);
+  float distZombie = dist(lake.x,lake.y,player.zombie.pos.x,player.zombie.pos.y);
   noFill();
   image(lakeImage,lake.x,lake.y,lakeSize,lakeSize);
-  if(d < lakeSize*0.5 + player.size*0.5){
+  if(distPlayer < lakeSize*0.5 + player.size*0.5){
     player.inMud = true;
   } else {
     player.inMud = false;
   } 
   
-  if(d < lakeSize*0.5 + player.zombie.size*0.5){
+  if(distZombie < lakeSize*0.5 + player.zombie.size*0.5){
     player.zombie.inMud = true;
   } else {
     player.zombie.inMud = false;
