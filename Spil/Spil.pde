@@ -30,7 +30,7 @@ void setup() {
   textAlign(CENTER, CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
   textSize(20); // Størrelse af teksten
   imageMode(CENTER);
- 
+
   lakeImage = loadImage("data/Lake.png");
   background = loadImage("data/Background.png");
 
@@ -39,20 +39,20 @@ void setup() {
   guess = 0; // Nulstil guess
   count = 0; // Nulstil count
 
-  lake = new PVector(player.zombie.pos.x,player.zombie.pos.y);
-  axisX = new PVector(1,0);
+  lake = new PVector(player.zombie.pos.x, player.zombie.pos.y);
+  axisX = new PVector(1, 0);
 
   point = new ArrayList<Point>(); // Initialisering af point listen
-  point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
+  //point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
 
-  currentPoint = point.get(0); // Sætter currentPoint til at være det første point/regnestykke
-  result = currentPoint.result; // Initialisering af result
-  point.remove(0); // Fjerner point/regnestykke fra listen
+  //currentPoint = point.get(0); // Sætter currentPoint til at være det første point/regnestykke
+  //result = currentPoint.result; // Initialisering af result
+  //point.remove(0); // Fjerner point/regnestykke fra listen
 
   breakTime = 1000; // Initialisering af breakTime til 1000 
-  lakeSize = int(random((width*0.1+height*0.1),(width*0.4+height*0.4)));
+  lakeSize = int(random((width*0.1+height*0.1), (width*0.4+height*0.4)));
 
-  pause = true; // 
+  pause = false; 
   inGame = true;
   dead = false;
 
@@ -61,6 +61,9 @@ void setup() {
   operators[1] = '-';
   operators[2] = '*';
   operators[3] = '/';
+
+  mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
+  mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
 }
 
 //------------------------------------------------------------------------------------------------------------- 
@@ -77,13 +80,13 @@ void draw() {
       if (inGame) {     // Hvis man er inden i spillet
         calculationScreen();
       } else { // pause skærm
-        image(background,width*0.5,height*0.5,width,height); // Sætter baggrund
+        image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
         slowZone(); // viser søen
         player.display(); // Viser spilleren
         player.zombie.display(); // Viser zombien
         updatePoints();  // Updaterer pointene
         textSize(100);
-        text("Pause" , width*0.5, height*0.2); // Viser spillerens score
+        text("Pause", width*0.5, height*0.2); // Viser spillerens score
         textSize(20);
         text(player.score, width*0.5, height*0.5); // Viser spillerens score
         text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens score
@@ -94,7 +97,7 @@ void draw() {
       noStroke();
       fill(255);
       rectMode(CORNER);
-      rect(width*0.836, height*0.85,50,50,10);
+      rect(width*0.836, height*0.85, 50, 50, 10);
       fill(0);
       textSize(50);
       text((int)map(breakTime, 0, 1000, 0, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
@@ -106,7 +109,7 @@ void draw() {
         breakTime = 1000;
       }
     } else {           // Her er koden til selve spillet
-      image(background,width*0.5,height*0.5,width,height); // Sætter baggrund
+      image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
       slowZone();
       text(player.score, width*0.5, height*0.5); // Viser spillerens score
       player.update(); // updaterer spilleren
@@ -124,7 +127,6 @@ void draw() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
-
   if (dead) {
     dead = false;
     frameCount = -1;
@@ -142,8 +144,6 @@ void mousePressed() {
         player.zombie.limit += 0.1; // zombien bliver hurtigere
       }
       guess = 0; // Nulstil guess
-      mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
-      mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
       pause = false; // Pausen sutter
     }
 
@@ -155,6 +155,8 @@ void mousePressed() {
       guess--; // guess formindskes med 1
     }
   }
+  mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
+  mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
 }
 
 //------------------------------------------------------------------------------------------------------------- 
@@ -183,7 +185,8 @@ void updatePoints() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void endScreen() {
-  text("Game Over!", width*0.5, height*0.5); // Skrives "Game Over!" midt på skærmen
+  textSize(70);
+  text("Game Over!", width*0.5, height*0.5); // Skriver "Game Over!" midt på skærmen
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -200,13 +203,15 @@ void spawnPoint() {
 //-------------------------------------------------------------------------------------------------------------
 
 void keyPressed() {
+  mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
+  mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
 
   if (key == 'p' || key == 'P') { // Der trykkes på p og Spillet pauses
-    if(pause && !inGame){ // Hvis man allerede er på pause
+    if (pause && !inGame) { // Hvis man allerede er på pause
       breakTime = 10;
-    } else {
+    } else if (!pause && inGame) {
       pause = true;
-      inGame = false;    
+      inGame = false;
     }
   } 
 
@@ -288,23 +293,22 @@ void calculationScreen() {
 
 //-------------------------------------------------------------------------------------------------------------
 
-void slowZone(){
-  float distPlayer = dist(lake.x,lake.y,player.pos.x,player.pos.y);
-  float distZombie = dist(lake.x,lake.y,player.zombie.pos.x,player.zombie.pos.y);
+void slowZone() {
+  float distPlayer = dist(lake.x, lake.y, player.pos.x, player.pos.y);
+  float distZombie = dist(lake.x, lake.y, player.zombie.pos.x, player.zombie.pos.y);
   noFill();
-  image(lakeImage,lake.x,lake.y,lakeSize,lakeSize);
-  if(distPlayer < lakeSize*0.5 + player.size*0.5){
+  image(lakeImage, lake.x, lake.y, lakeSize, lakeSize);
+  if (distPlayer < lakeSize*0.5 + player.size*0.5) {
     player.inMud = true;
   } else {
     player.inMud = false;
   } 
-  
-  if(distZombie < lakeSize*0.5 + player.zombie.size*0.5){
+
+  if (distZombie < lakeSize*0.5 + player.zombie.size*0.5) {
     player.zombie.inMud = true;
   } else {
     player.zombie.inMud = false;
   }
-  
 }
 
 //-------------------------------------------------------------------------------------------------------------
