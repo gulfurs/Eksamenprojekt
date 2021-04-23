@@ -11,10 +11,14 @@ class Point{
   int operator;
   int result;
   
+  PImage pointImage;
+  
   Point(int level_){
     size = 10;
     
     pos = new PVector((int)random(size,width-size),(int)random(size,height-size));
+    
+    pointImage = loadImage("data/Zombie.png");
     
     operator = level_;
     
@@ -54,8 +58,9 @@ class Point{
 
   void display(){
     text(operators[operator], pos.x, pos.y - size*2);
-    rectMode(CENTER);
-    rect(pos.x,pos.y,size,size);
+    image(pointImage,pos.x,pos.y);
+    //rectMode(CENTER);
+    //rect(pos.x,pos.y,size,size);
   }
 
 

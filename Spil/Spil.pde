@@ -43,11 +43,7 @@ void setup() {
   axisX = new PVector(1, 0);
 
   point = new ArrayList<Point>(); // Initialisering af point listen
-  //point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
-
-  //currentPoint = point.get(0); // Sætter currentPoint til at være det første point/regnestykke
-  //result = currentPoint.result; // Initialisering af result
-  //point.remove(0); // Fjerner point/regnestykke fra listen
+  point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
 
   breakTime = 1000; // Initialisering af breakTime til 1000 
   lakeSize = int(random((width*0.1+height*0.1), (width*0.4+height*0.4)));
