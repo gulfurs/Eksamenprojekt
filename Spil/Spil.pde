@@ -103,6 +103,8 @@ void draw() {
         pause = false;
         inGame = true;
         breakTime = 1000;
+        guess = 0;
+        player.score--;
       }
     } else {           // Her er koden til selve spillet
       image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
