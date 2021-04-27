@@ -14,6 +14,7 @@ int level; // Det level man er på(+, -, * eller /)
 int breakTime; // Pausetiden (ca. 10 sek)
 int lakeSize; // Størrelsen af søen
 
+float wrongAnswerRate;
 
 boolean pause; // Bestemmer om der er pause fra spillet
 boolean dead; // Bestemmer om man er død
@@ -38,6 +39,7 @@ void setup() {
   level = 0; // Nulstil level
   guess = 0; // Nulstil guess
   count = 0; // Nulstil count
+  wrongAnswerRate = 1.0;
 
   lake = new PVector(player.zombie.pos.x, player.zombie.pos.y);
   axisX = new PVector(1, 0);
@@ -85,7 +87,7 @@ void draw() {
         text("Pause", width*0.5, height*0.2); // Viser spillerens score
         textSize(40);
         text(player.score, width*0.5, height*0.5); // Viser spillerens score
-        text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens score
+        text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens level
       }
 
       breakTime--;     // Nedsætting af pausetid
@@ -100,11 +102,13 @@ void draw() {
       textSize(20);
 
       if (breakTime<0) {
+        if(pause && inGame){
+          player.score--;        
+        }
         pause = false;
         inGame = true;
         breakTime = 1000;
         guess = 0;
-        player.score--;
       }
     } else {           // Her er koden til selve spillet
       image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
@@ -193,7 +197,7 @@ void endScreen() {
 //-------------------------------------------------------------------------------------------------------------
 
 void spawnPoint() {
-  if (count > 300) { // Count større end 300
+  if (count > 200) { // Count større end 300
     point.add(new Point(level)); // Tilføjelse af nyt point/regnestykke til listen
     count = 0; // count nulstilles
   } else {
@@ -209,7 +213,7 @@ void keyPressed() {
 
   if (key == 'p' || key == 'P') { // Der trykkes på p og Spillet pauses
     if (pause && !inGame) { // Hvis man allerede er på pause
-      breakTime = 10;
+      breakTime = 5;
     } else if (!pause && inGame) {
       pause = true;
       inGame = false;
@@ -235,8 +239,9 @@ void keyPressed() {
         player.score++;
         player.zombie.noLimit *= 0.70;
       } else if (guess != result) {
+        wrongAnswerRate += 0.05;
         player.score--;
-        player.zombie.noLimit *= 1.1;
+        player.zombie.noLimit *= wrongAnswerRate;
       }
       mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
       mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
