@@ -66,8 +66,7 @@ class Zombie {
   //------------------------------------------------------------------------------------------------------------- 
 
   void speedLimit() {
-    mudLimit = noLimit*0.6;
-    
+    mudLimit = noLimit*0.6; 
     if (inMud) {
       limit = mudLimit;
     } else {
