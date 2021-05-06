@@ -30,8 +30,9 @@ PVector axisX;
 
 void setup() {
   size(800, 800); // Størrelsen af vinduet
+  //fullScreen();
 
-  textAlign(CENTER, CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
+  textAlign(CENTER,CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
   textSize(20); // Størrelse af teksten
   imageMode(CENTER);
 
@@ -85,7 +86,7 @@ void draw() {
         if (inGame) {     // Hvis man er inden i spillet
           calculationScreen();
         } else { // pause skærm
-          image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
+          image(background, width*0.5, height*0.5); // Sætter baggrund
           slowZone(); // viser søen
           player.display(); // Viser spilleren
           player.zombie.display(); // Viser zombien
@@ -101,8 +102,8 @@ void draw() {
 
         noStroke();
         fill(255);
-        rectMode(CORNER);
-        rect(width*0.836, height*0.85, 50, 50, 10);
+        rectMode(CENTER);
+        rect(width*0.9, height*0.905, 50, 50, 10);
         fill(0);
         textSize(50);
         text((int)map(breakTime, 0, 1000, 1, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
@@ -118,7 +119,7 @@ void draw() {
           guess = 0;
         }
       } else {           // Her er koden til selve spillet
-        image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
+        image(background, width*0.5, height*0.5); // Sætter baggrund
         slowZone();
         fill(200);
         textSize(100);
