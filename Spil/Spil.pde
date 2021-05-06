@@ -19,6 +19,7 @@ float wrongAnswerRate;
 boolean pause; // Bestemmer om der er pause fra spillet
 boolean dead; // Bestemmer om man er død
 boolean inGame; // Bestemmer om man er i gang med spillet
+boolean startScreen;
 
 char[] operators; // +, -, * eller /
 
@@ -53,6 +54,7 @@ void setup() {
   pause = false; 
   inGame = true;
   dead = false;
+  startScreen = true;
 
   operators = new char[4]; // Initialisering af de fire forskellige operators
   operators[0] = '+';
@@ -68,69 +70,74 @@ void setup() {
 
 void draw() {
 
-  if (dead) {           // Hvis spilleren er død
+  if (!startScreen) {
+    if (dead) {           // Hvis spilleren er død
 
-    endScreen();        // Viser slut skærmen
-  } else {              // Hvis spilleren er i live
+      endScreen();        // Viser slut skærmen
+    } else {              // Hvis spilleren er i live
 
-    if (pause) {        // Pauser spillet og viser regnestykket // Hvis spillet er på pause
+      if (pause) {        // Pauser spillet og viser regnestykket // Hvis spillet er på pause
 
-      if (inGame) {     // Hvis man er inden i spillet
-        calculationScreen();
-      } else { // pause skærm
-        image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
-        slowZone(); // viser søen
-        player.display(); // Viser spilleren
-        player.zombie.display(); // Viser zombien
-        updatePoints();  // Updaterer pointene
-        textSize(100);
-        text("Pause", width*0.5, height*0.2); // Viser spillerens score
-        textSize(40);
-        text(player.score, width*0.5, height*0.5); // Viser spillerens score
-        text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens level
-      }
-
-      breakTime--;     // Nedsætting af pausetid
-
-      noStroke();
-      fill(255);
-      rectMode(CORNER);
-      rect(width*0.836, height*0.85, 50, 50, 10);
-      fill(0);
-      textSize(50);
-      text((int)map(breakTime, 0, 1000, 0, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
-      textSize(20);
-
-      if (breakTime<0) {
-        if(pause && inGame){
-          player.score--;        
+        if (inGame) {     // Hvis man er inden i spillet
+          calculationScreen();
+        } else { // pause skærm
+          image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
+          slowZone(); // viser søen
+          player.display(); // Viser spilleren
+          player.zombie.display(); // Viser zombien
+          updatePoints();  // Updaterer pointene
+          textSize(100);
+          text("Pause", width*0.5, height*0.2); // Viser spillerens score
+          textSize(40);
+          text(player.score, width*0.5, height*0.5); // Viser spillerens score
+          text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens level
         }
-        pause = false;
-        inGame = true;
-        breakTime = 1000;
-        guess = 0;
-      }
-    } else {           // Her er koden til selve spillet
-      image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
-      slowZone();
-      fill(200);
-      textSize(100);
-      text(player.score, width*0.5, height*0.8,100); // Viser spillerens score
-      player.update(); // updaterer spilleren
-      updatePoints();  // updaterer pointene
-      hit();           // Tjekker om spilleren rør et point    
-      spawnPoint();    // spawner point
-      level();         // ændre det level man spillet på
-      if (player.hit()) {
-        dead = true;   // hvis spilleren bliver ramt af zombien så dør man
+
+        breakTime--;     // Nedsætting af pausetid
+
+        noStroke();
+        fill(255);
+        rectMode(CORNER);
+        rect(width*0.836, height*0.85, 50, 50, 10);
+        fill(0);
+        textSize(50);
+        text((int)map(breakTime, 0, 1000, 0, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
+        textSize(20);
+
+        if (breakTime<0) {
+          if (pause && inGame) {
+            player.score--;
+          }
+          pause = false;
+          inGame = true;
+          breakTime = 1000;
+          guess = 0;
+        }
+      } else {           // Her er koden til selve spillet
+        image(background, width*0.5, height*0.5, width, height); // Sætter baggrund
+        slowZone();
+        fill(200);
+        textSize(100);
+        text(player.score, width*0.5, height*0.8, 100); // Viser spillerens score
+        player.update(); // updaterer spilleren
+        updatePoints();  // updaterer pointene
+        hit();           // Tjekker om spilleren rør et point    
+        spawnPoint();    // spawner point
+        level();         // ændre det level man spillet på
+        if (player.hit()) {
+          dead = true;   // hvis spilleren bliver ramt af zombien så dør man
+        }
       }
     }
+  } else {
+    startScreen();
   }
 }
 
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
+  startScreen = false;
   if (dead) {
     dead = false;
     frameCount = -1;
@@ -319,3 +326,11 @@ void slowZone() {
 }
 
 //-------------------------------------------------------------------------------------------------------------
+
+
+void startScreen(){
+  background(200);
+  // startskærm informationer
+  fill(0);
+  text("Tap to play",width*0.5,height*0.5);
+}
