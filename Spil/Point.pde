@@ -11,14 +11,11 @@ class Point{
   int operator;
   int result;
   
-  PImage pointImage;
-  
   Point(int level_){
     size = 20;
     
     pos = new PVector((int)random(size,width-size),(int)random(size,height-size));
     
-    pointImage = loadImage("data/Point.png");
     
     operator = level_;
     
@@ -43,7 +40,7 @@ class Point{
     } else if(operator==2){
       result = valueOne * valueTwo;
     } else if(operator==3){
-      result = valueOne / valueTwo; //Fejl med at dividere med 0
+      result = valueOne / valueTwo;
     }
     
   }

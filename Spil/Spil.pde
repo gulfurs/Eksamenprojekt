@@ -6,6 +6,8 @@ ArrayList<Point> point; // Liste over de point/regnestykker der er på banen
 
 PImage lakeImage;
 PImage background;
+PImage pointImage;
+PImage playerImage;
 
 int count; // Bliver brugt til at spawne regnestykker
 int guess; // Det tal man gætter på når man skal regne et regnestykke
@@ -27,7 +29,7 @@ PVector lake;
 PVector axisX;
 
 void setup() {
-  size(400, 400); // Størrelsen af vinduet
+  size(800, 800); // Størrelsen af vinduet
 
   textAlign(CENTER, CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
   textSize(20); // Størrelse af teksten
@@ -35,6 +37,8 @@ void setup() {
 
   lakeImage = loadImage("data/Lake.png");
   background = loadImage("data/Background.png");
+  pointImage = loadImage("data/Point.png");
+  playerImage = loadImage("data/Player.png");
 
   player = new Player(); // Initialisering af spilleren
   level = 0; // Nulstil level
@@ -101,7 +105,7 @@ void draw() {
         rect(width*0.836, height*0.85, 50, 50, 10);
         fill(0);
         textSize(50);
-        text((int)map(breakTime, 0, 1000, 0, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
+        text((int)map(breakTime, 0, 1000, 1, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
         textSize(20);
 
         if (breakTime<0) {
