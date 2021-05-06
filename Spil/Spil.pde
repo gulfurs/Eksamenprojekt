@@ -298,11 +298,12 @@ void calculationScreen() {
 
   fill(0); //Tilbage til sort
   stroke(0);
-  text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*0.27);
+  textSize((width+height)*0.025);
+  text(currentPoint.valueOne + " " + operators[currentPoint.operator] + " " + currentPoint.valueTwo, width*0.5, height*3/12);
   text("Gæt: " + guess, width*0.5, height*0.5);
   text("+", width*0.75, height*0.5);
   text("-", width*0.25, height*0.5);
-  text("Enter", width*0.5, height*0.76);
+  text("Enter", width*0.5, height*9/12);
 }
 
 //-------------------------------------------------------------------------------------------------------------
