@@ -22,7 +22,8 @@ float wrongAnswerRate;
 boolean pause; // Bestemmer om der er pause fra spillet
 boolean dead; // Bestemmer om man er død
 boolean inGame; // Bestemmer om man er i gang med spillet
-boolean startScreen;
+
+int startScreen;
 
 char[] operators; // +, -, * eller /
 
@@ -61,7 +62,7 @@ void setup() {
   pause = false; 
   inGame = true;
   dead = false;
-  startScreen = true;
+  startScreen = 0;
 
   operators = new char[4]; // Initialisering af de fire forskellige operators
   operators[0] = '+';
@@ -77,7 +78,7 @@ void setup() {
 
 void draw() {
 
-  if (!startScreen) {
+  if (startScreen == 1) {
     if (dead) {           // Hvis spilleren er død
 
       endScreen();        // Viser slut skærmen
@@ -144,7 +145,9 @@ void draw() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
-  startScreen = false;
+  if (mouseY > height-(height*3/4) && mouseY < height-(9/16)){
+  startScreen = 1;
+  }
   if (dead) {
     dead = false;
     frameCount = -1;
