@@ -16,14 +16,10 @@ class Player{
   float mudLimit;
   float noLimit;
   
-  PImage playerImage;
-  
   Player(){
    zombie = new Zombie((int)random(width),(int)random(height));
    
-   playerImage = loadImage("data/Player.png");
-   
-   size = 20;
+   size = 30;
    score = 0;
    noLimit = 3;
    

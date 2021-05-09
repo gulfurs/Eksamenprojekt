@@ -16,7 +16,7 @@ class Zombie {
   PImage zombieImage;
 
   Zombie(int x, int y) {
-    size = 20;
+    size = 40;
 
     limit = 0.2;
 
