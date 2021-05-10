@@ -8,6 +8,7 @@ PImage lakeImage;
 PImage background;
 PImage pointImage;
 PImage playerImage;
+PImage startImage;
 
 int count; // Bliver brugt til at spawne regnestykker
 int guess; // Det tal man gætter på når man skal regne et regnestykke
@@ -40,6 +41,7 @@ void setup() {
   background = loadImage("data/Background.png");
   pointImage = loadImage("data/Point.png");
   playerImage = loadImage("data/Player.png");
+  startImage = loadImage("data/Start.png");
 
   player = new Player(); // Initialisering af spilleren
   level = 0; // Nulstil level
@@ -336,8 +338,10 @@ void slowZone() {
 
 
 void startScreen(){
-  background(200);
+  startImage.resize(800,800);
+  background(startImage);
+  
   // startskærm informationer
-  fill(0);
-  text("Tap to play",width*0.5,height*0.5);
+  //fill(0);
+  //text("Tap to play",width*0.5,height*0.5);
 }
