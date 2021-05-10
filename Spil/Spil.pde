@@ -65,7 +65,7 @@ void setup() {
   point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
 
   breakTime = 1000; // Initialisering af breakTime til 1000 
-  lakeSize = (int)random((width+height)*0.125, (width+height)*0.5);
+  lakeSize = (int)random((width+height)*0.125, (width+height)*0.35);
   lakeImage.resize(lakeSize, lakeSize);
 
   pause = false; 
@@ -153,7 +153,7 @@ void mousePressed() {
 
   if (inGame) { // Hvis man er inde i spillet
     if (pause && (mouseX>width*1/3 && mouseX<width*2/3 && mouseY>height*4/6 && mouseY<height*5/6)) { // Hvis det klikkes på den blå firkant
-      guessAndResult();
+      checkGuessAndResult();
       guess = 0; // Nulstil guess
       pause = false; // Pausen sutter
       breakTime = 1000;
@@ -245,7 +245,7 @@ void keyPressed() {
     }
 
     if (key == ENTER && pause) {
-      guessAndResult();
+      checkGuessAndResult();
       mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
       mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
       pause = false;
@@ -272,7 +272,9 @@ void level() {
 //-------------------------------------------------------------------------------------------------------------
 
 void calculationScreen() {
-
+  ding.stop();
+  buzz.stop();
+  
   rectMode(CORNER);
   noStroke();
 
@@ -311,7 +313,7 @@ void slowZone() {
   float distPlayer = dist(lake.x, lake.y, player.pos.x, player.pos.y);
   float distZombie = dist(lake.x, lake.y, player.zombie.pos.x, player.zombie.pos.y);
   noFill();
-  image(lakeImage, lake.x, lake.y, lakeSize, lakeSize);
+  image(lakeImage, lake.x, lake.y);
   if (distPlayer < lakeSize*0.5 + player.size*0.5) {
     player.inMud = true;
   } else {
@@ -352,7 +354,7 @@ void pauseScreen() {
 
 //-------------------------------------------------------------------------------------------------------------
 
-void guessAndResult() {
+void checkGuessAndResult() {
   if (guess == result) {
     ding.play();
     player.score++;
