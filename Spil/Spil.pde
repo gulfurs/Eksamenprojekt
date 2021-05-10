@@ -32,9 +32,9 @@ PVector axisX;
 void setup() {
   size(800, 800); // Størrelsen af vinduet
 
-  textAlign(CENTER,CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
+  textAlign(CENTER, CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
   textSize(20); // Størrelse af teksten
-  
+
   imageMode(CENTER);
 
   lakeImage = loadImage("data/Lake.png");
@@ -56,7 +56,8 @@ void setup() {
   point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
 
   breakTime = 1000; // Initialisering af breakTime til 1000 
-  lakeSize = int((width+height)*0.15);
+  lakeSize = (int)random((width+height)*0.125,(width+height)*0.5);
+  lakeImage.resize(lakeSize, lakeSize);
 
   pause = false; 
   inGame = true;
@@ -88,16 +89,7 @@ void draw() {
         if (inGame) {     // Hvis man er inden i spillet
           calculationScreen();
         } else { // pause skærm
-          image(background, width*0.5, height*0.5); // Sætter baggrund
-          slowZone(); // viser søen
-          player.display(); // Viser spilleren
-          player.zombie.display(); // Viser zombien
-          updatePoints();  // Updaterer pointene
-          textSize(100);
-          text("Pause", width*0.5, height*0.2); // Viser spillerens score
-          textSize(40);
-          text(player.score, width*0.5, height*0.5); // Viser spillerens score
-          text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens level
+          pauseScreen();
         }
 
         breakTime--;     // Nedsætting af pausetid
@@ -222,7 +214,9 @@ void spawnPoint() {
 //-------------------------------------------------------------------------------------------------------------
 
 void keyPressed() {
+
   startScreen = false;
+
   mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
   mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
 
@@ -312,6 +306,9 @@ void calculationScreen() {
   text("+", width*0.75, height*0.5);
   text("-", width*0.25, height*0.5);
   text("Enter", width*0.5, height*9/12);
+  textSize((width+height)*0.008);
+  text("(→)", width*0.75, height*0.55);
+  text("(←)", width*0.25, height*0.55);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -337,11 +334,24 @@ void slowZone() {
 //-------------------------------------------------------------------------------------------------------------
 
 
-void startScreen(){
-  startImage.resize(800,800);
+void startScreen() {
+  startImage.resize(width, height);
   background(startImage);
-  
-  // startskærm informationer
-  //fill(0);
-  //text("Tap to play",width*0.5,height*0.5);
+}
+
+
+void pauseScreen() {
+  image(background, width*0.5, height*0.5); // Sætter baggrund
+  slowZone(); // viser søen
+  player.display(); // Viser spilleren
+  player.zombie.display(); // Viser zombien
+  updatePoints();  // Updaterer pointene
+  textSize(int((width+height)*0.0625));
+  text("Pause", width*0.5, height*0.2); // Viser spillerens score
+  textSize(int((width+height)*0.01875));
+  text("Din score er: " + player.score, width*0.5, height*0.5); // Viser spillerens score
+  text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens level
+  textSize(int((width+height)*0.0125));
+  text("Tryk 'p' for at afslutte pausen", width*0.5, height*0.3);
+
 }
