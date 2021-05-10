@@ -16,7 +16,7 @@ class Zombie {
   PImage zombieImage;
 
   Zombie(int x, int y) {
-    size = 40;
+    size = int((width+height)*0.025);
 
     limit = 0.2;
 
@@ -38,7 +38,7 @@ class Zombie {
   //------------------------------------------------------------------------------------------------------------- 
 
   void display() {
-    textSize(12);
+    textSize((height+width)*0.01);
     text(int(map(limit,0,3,0,100)), pos.x, pos.y - size);
     pushMatrix();
     translate(pos.x, pos.y);

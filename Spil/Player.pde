@@ -19,7 +19,7 @@ class Player{
   Player(){
    zombie = new Zombie((int)random(width),(int)random(height));
    
-   size = 30;
+   size = int((height+width)*0.01875);
    score = 0;
    noLimit = 3;
    
@@ -52,9 +52,10 @@ class Player{
       rotate(vel.heading()+radians(90));
     }
     image(playerImage,0,0,size,size);
+    fill(200);
     popMatrix();
-    textSize(12);
-    text(int(map(vel.mag(),0,3,0,100)), pos.x, pos.y - size*2);
+    textSize((height+width)*0.01);
+    text(int(map(vel.mag(),0,3,0,100)), pos.x, pos.y - size);
   }
   
   //-------------------------------------------------------------------------------------------------------------
