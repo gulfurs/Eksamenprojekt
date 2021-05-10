@@ -1,6 +1,10 @@
+import processing.sound.*;
 Player player; // Spilleren
 
 Point currentPoint; // Pointet/regnestykket man er i gang med at løse
+
+SoundFile ding;
+SoundFile buzz;
 
 ArrayList<Point> point; // Liste over de point/regnestykker der er på banen
 
@@ -43,6 +47,11 @@ void setup() {
   playerImage = loadImage("data/Player.png");
   startImage = loadImage("data/Start.png");
 
+  ding = new SoundFile(this, "data/Ding.mp3");
+  buzz = new SoundFile(this, "data/Buzz.mp3");
+  ding.amp(1);
+  buzz.amp(1);
+
   player = new Player(); // Initialisering af spilleren
   level = 0; // Nulstil level
   guess = 0; // Nulstil guess
@@ -56,7 +65,7 @@ void setup() {
   point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
 
   breakTime = 1000; // Initialisering af breakTime til 1000 
-  lakeSize = (int)random((width+height)*0.125,(width+height)*0.5);
+  lakeSize = (int)random((width+height)*0.125, (width+height)*0.5);
   lakeImage.resize(lakeSize, lakeSize);
 
   pause = false; 
@@ -77,15 +86,11 @@ void setup() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void draw() {
-
   if (!startScreen) {
     if (dead) {           // Hvis spilleren er død
-
       endScreen();        // Viser slut skærmen
     } else {              // Hvis spilleren er i live
-
-      if (pause) {        // Pauser spillet og viser regnestykket // Hvis spillet er på pause
-
+      if (pause) {        
         if (inGame) {     // Hvis man er inden i spillet
           calculationScreen();
         } else { // pause skærm
@@ -136,7 +141,11 @@ void draw() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
-  startScreen = false;
+  if (startScreen && mouseX < 0 && mouseX < 0 && mouseY < 0 && mouseX < Y) { // skal ændret til hvor exit knappen er
+    exit();
+  } else {
+    startScreen = false;
+  }
   if (dead) {
     dead = false;
     frameCount = -1;
@@ -144,15 +153,7 @@ void mousePressed() {
 
   if (inGame) { // Hvis man er inde i spillet
     if (pause && (mouseX>width*1/3 && mouseX<width*2/3 && mouseY>height*4/6 && mouseY<height*5/6)) { // Hvis det klikkes på den blå firkant
-      if (guess == result) { // Hvis man har svaret rigtigt
-        player.score++; // Score forøges
-        if (player.zombie.limit>0) {
-          player.zombie.limit -= 0.30; // zombien bliver langsommere
-        }
-      } else if (guess != result) { // Hvis man har svaret forkert
-        player.score--; // Score formindskes
-        player.zombie.limit += 0.1; // zombien bliver hurtigere
-      }
+      guessAndResult();
       guess = 0; // Nulstil guess
       pause = false; // Pausen sutter
       breakTime = 1000;
@@ -244,14 +245,7 @@ void keyPressed() {
     }
 
     if (key == ENTER && pause) {
-      if (guess == result) {
-        player.score++;
-        player.zombie.noLimit *= 0.70;
-      } else if (guess != result) {
-        wrongAnswerRate += 0.05;
-        player.score--;
-        player.zombie.noLimit *= wrongAnswerRate;
-      }
+      guessAndResult();
       mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
       mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
       pause = false;
@@ -339,6 +333,7 @@ void startScreen() {
   background(startImage);
 }
 
+//-------------------------------------------------------------------------------------------------------------
 
 void pauseScreen() {
   image(background, width*0.5, height*0.5); // Sætter baggrund
@@ -353,5 +348,19 @@ void pauseScreen() {
   text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens level
   textSize(int((width+height)*0.0125));
   text("Tryk 'p' for at afslutte pausen", width*0.5, height*0.3);
+}
 
+//-------------------------------------------------------------------------------------------------------------
+
+void guessAndResult() {
+  if (guess == result) {
+    ding.play();
+    player.score++;
+    player.zombie.noLimit *= 0.70;
+  } else if (guess != result) {
+    buzz.play();
+    wrongAnswerRate += 0.05;
+    player.score--;
+    player.zombie.noLimit *= wrongAnswerRate;
+  }
 }
