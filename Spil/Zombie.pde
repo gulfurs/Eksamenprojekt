@@ -18,7 +18,7 @@ class Zombie {
   Zombie(int x, int y) {
     size = int((width+height)*0.025);
 
-    limit = 0.2;
+    limit = (height+width)*0.000125;
 
     zombieImage = loadImage("data/Zombie.png");
 
@@ -31,7 +31,7 @@ class Zombie {
 
   void update() {    
     speedLimit();
-    noLimit += 0.001;
+    noLimit += (height+width)*0.000000625;
     display();
   }
 

@@ -1,93 +1,100 @@
-class Player{
+class Player {
 
   Zombie zombie;
-  
+
   PVector pos;
   PVector vel;
   PVector acc;
-  
+
   boolean inMud;
-  
+
   int size;
   int score;
-  
+
   float limit;
-  
+
   float mudLimit;
   float noLimit;
-  
-  Player(){
-   zombie = new Zombie((int)random(width),(int)random(height));
-   
-   size = int((height+width)*0.01875);
-   score = 0;
-   noLimit = 3;
-   
-   pos = new PVector(width*0.5,height*0.5);
-   vel = new PVector(0,0);
-   acc = new PVector(0,0);
-    
+
+  Player() {
+    zombie = new Zombie((int)random(width), (int)random(height));
+
+    size = int((height+width)*0.01875);
+    score = 0;
+    noLimit = int((height+width)*0.001875);
+
+    pos = new PVector(width*0.5, height*0.5);
+    vel = new PVector(0, 0);
+    acc = new PVector(0, 0);
   }
-  
+
   //------------------------------------------------------------------------------------------------------------- 
-  
-  void update(){
+
+  void update() {
     speedLimit();
     zombie.update();
     display();
     move();
-    if(score<0){score=0;}
+    if (score<0) {
+      score=0;
+    }
   }
-  
+
   //-------------------------------------------------------------------------------------------------------------
-  
-  void display(){
-    //ellipseMode(CENTER);
-    //ellipse(pos.x,pos.y,size,size);
+
+  void display() {
+
     pushMatrix();
     translate(pos.x, pos.y);
-    if(vel.mag()<=1){
+    if (vel.mag()<=1) {
       rotate(zombie.vel.heading()-radians(90));
     } else {
       rotate(vel.heading()+radians(90));
     }
-    image(playerImage,0,0,size,size);
+    image(playerImage, 0, 0, size, size);
     fill(200);
     popMatrix();
     textSize((height+width)*0.01);
-    text(int(map(vel.mag(),0,3,0,100)), pos.x, pos.y - size);
+    int spd;
+    if (inMud) {
+      spd = 60;
+    } else if(vel.mag()>1){
+      spd = 100;
+    } else {
+      spd = 0;
+    }
+    text(spd, pos.x, pos.y - size);
   }
-  
+
   //-------------------------------------------------------------------------------------------------------------
 
-  void move(){
-    zombie.move(pos.x,pos.y);
-    acc.add(mouseX-pos.x,mouseY-pos.y);
+  void move() {
+    zombie.move(pos.x, pos.y);
+    acc.add(mouseX-pos.x, mouseY-pos.y);
     pos.add(vel);
     vel.add(acc);
     acc.mult(0);
     vel.limit(limit);
-    if(dist(pos.x,pos.y,mouseX,mouseY)<5){
+    if (dist(pos.x, pos.y, mouseX, mouseY)<5) {
       vel.mult(0);
     }
   }
-  
+
   //-------------------------------------------------------------------------------------------------------------
-  
-  boolean hit(){ // retunere true, hvis man rør zombien
-    return dist(pos.x,pos.y,zombie.pos.x,zombie.pos.y)<(zombie.size+size)*0.5;
+
+  boolean hit() { // retunere true, hvis man rør zombien
+    return dist(pos.x, pos.y, zombie.pos.x, zombie.pos.y)<(zombie.size+size)*0.5;
   }
 
   //-------------------------------------------------------------------------------------------------------------
 
-  void speedLimit(){
+  void speedLimit() {
     noLimit = 3;
     mudLimit = noLimit*0.6;
-    if(inMud){
+    if (inMud) {
       limit = mudLimit;
     } else {
       limit = noLimit;
     }
-  } 
-  
+  }
 }
