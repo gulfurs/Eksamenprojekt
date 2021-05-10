@@ -57,7 +57,7 @@ void setup() {
   point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
 
   breakTime = 1000; // Initialisering af breakTime til 1000 
-  lakeSize = int(random((width*0.1+height*0.1), (width*0.4+height*0.4)));
+  lakeSize = 248;
 
   pause = false; 
   inGame = true;
