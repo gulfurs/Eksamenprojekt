@@ -145,7 +145,7 @@ void draw() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {
-  if (mouseY > height-(height*3/4) && mouseY < height-(9/16)){
+  if (mouseY > height-(height*6/8) && mouseY < height-(height*9/16)){
   startScreen = 1;
   }
   if (dead) {
