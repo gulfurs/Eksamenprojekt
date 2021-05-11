@@ -12,7 +12,7 @@ class Point{
   int result;
   
   Point(int level_){
-    size = 20;
+    size = int((width+height)*0.0125);
     
     pos = new PVector((int)random(size,width-size),(int)random(size,height-size));
     
@@ -54,7 +54,8 @@ class Point{
   //------------------------------------------------------------------------------------------------------------- 
 
   void display(){
-    textSize(20);
+    fill(200);
+    textSize((width+height)*0.0125);
     image(pointImage,pos.x,pos.y,size,size);
     text(operators[operator], pos.x, pos.y - size*0.2);
   }

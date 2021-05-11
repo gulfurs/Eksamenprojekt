@@ -1,6 +1,10 @@
+import processing.sound.*;
 Player player; // Spilleren
 
 Point currentPoint; // Pointet/regnestykket man er i gang med at løse
+
+SoundFile ding;
+SoundFile buzz;
 
 ArrayList<Point> point; // Liste over de point/regnestykker der er på banen
 
@@ -32,10 +36,10 @@ PVector axisX;
 
 void setup() {
   size(800, 800); // Størrelsen af vinduet
-  //fullScreen();
 
-  textAlign(CENTER,CENTER); // (CENTER,CENTER) eller bare (CENTER) // Ligesom rectMode(CENTER) bare med tekst
+  textAlign(CENTER, CENTER);
   textSize(20); // Størrelse af teksten
+
   imageMode(CENTER);
 
   lakeImage = loadImage("data/Lake.png");
@@ -43,6 +47,11 @@ void setup() {
   pointImage = loadImage("data/Point.png");
   playerImage = loadImage("data/Player.png");
   startImage = loadImage("data/Start.png");
+
+  ding = new SoundFile(this, "data/Ding.mp3");
+  buzz = new SoundFile(this, "data/Buzz.mp3");
+  ding.amp(0.8);
+  buzz.amp(0.8);
 
   player = new Player(); // Initialisering af spilleren
   level = 0; // Nulstil level
@@ -57,7 +66,10 @@ void setup() {
   point.add(new Point(level)); // Tilføjelse af point/regnestykke til listen
 
   breakTime = 1000; // Initialisering af breakTime til 1000 
-  lakeSize = 248;
+
+  lakeSize = (int)random((width+height)*0.125, (width+height)*0.35);
+  lakeImage.resize(lakeSize, lakeSize);
+  startImage.resize(width, height);
 
   pause = false; 
   inGame = true;
@@ -70,8 +82,7 @@ void setup() {
   operators[2] = '*';
   operators[3] = '/';
 
-  mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
-  mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
+  doNotMove();
 }
 
 //------------------------------------------------------------------------------------------------------------- 
@@ -80,39 +91,21 @@ void draw() {
 
   if (startScreen == 1) {
     if (dead) {           // Hvis spilleren er død
-
       endScreen();        // Viser slut skærmen
     } else {              // Hvis spilleren er i live
-
-      if (pause) {        // Pauser spillet og viser regnestykket // Hvis spillet er på pause
-
+      if (pause) {        
         if (inGame) {     // Hvis man er inden i spillet
           calculationScreen();
         } else { // pause skærm
-          image(background, width*0.5, height*0.5); // Sætter baggrund
-          slowZone(); // viser søen
-          player.display(); // Viser spilleren
-          player.zombie.display(); // Viser zombien
-          updatePoints();  // Updaterer pointene
-          textSize(100);
-          text("Pause", width*0.5, height*0.2); // Viser spillerens score
-          textSize(40);
-          text(player.score, width*0.5, height*0.5); // Viser spillerens score
-          text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens level
+          pauseScreen();
         }
 
         breakTime--;     // Nedsætting af pausetid
 
-        noStroke();
-        fill(255);
-        rectMode(CENTER);
-        rect(width*0.9, height*0.905, 50, 50, 10);
-        fill(0);
-        textSize(50);
-        text((int)map(breakTime, 0, 1000, 1, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
-        textSize(20);
+        countDown();
 
         if (breakTime<0) {
+          doNotMove();
           if (pause && inGame) {
             player.score--;
           }
@@ -125,7 +118,7 @@ void draw() {
         image(background, width*0.5, height*0.5); // Sætter baggrund
         slowZone();
         fill(200);
-        textSize(100);
+        textSize(int((width+height)*0.0625));
         text(player.score, width*0.5, height*0.8, 100); // Viser spillerens score
         player.update(); // updaterer spilleren
         updatePoints();  // updaterer pointene
@@ -144,9 +137,11 @@ void draw() {
 
 //------------------------------------------------------------------------------------------------------------- 
 
-void mousePressed() {
-  if (mouseY > height-(height*6/8) && mouseY < height-(height*9/16)){
-  startScreen = 1;
+void mousePressed() {  
+  if (startScreen && mouseX > int((width+height)*0.140625) && mouseX < int((width+height)*0.365625) && mouseY > int((width+height)*0.34375) && mouseX < int((width+height)*0.375)) { // skal ændret til hvor exit knappen er
+    exit();
+  } else {
+    startScreen = false;
   }
   if (dead) {
     dead = false;
@@ -155,15 +150,7 @@ void mousePressed() {
 
   if (inGame) { // Hvis man er inde i spillet
     if (pause && (mouseX>width*1/3 && mouseX<width*2/3 && mouseY>height*4/6 && mouseY<height*5/6)) { // Hvis det klikkes på den blå firkant
-      if (guess == result) { // Hvis man har svaret rigtigt
-        player.score++; // Score forøges
-        if (player.zombie.limit>0) {
-          player.zombie.limit -= 0.30; // zombien bliver langsommere
-        }
-      } else if (guess != result) { // Hvis man har svaret forkert
-        player.score--; // Score formindskes
-        player.zombie.limit += 0.1; // zombien bliver hurtigere
-      }
+      checkGuessAndResult();
       guess = 0; // Nulstil guess
       pause = false; // Pausen sutter
       breakTime = 1000;
@@ -177,8 +164,7 @@ void mousePressed() {
       guess--; // guess formindskes med 1
     }
   }
-  mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
-  mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
+  doNotMove();
 }
 
 //------------------------------------------------------------------------------------------------------------- 
@@ -207,8 +193,10 @@ void updatePoints() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void endScreen() {
-  textSize(70);
-  text("Game Over!", width*0.5, height*0.5); // Skriver "Game Over!" midt på skærmen
+  textSize(int((width+height)*0.04375));
+  text("Game Over", width*0.5, height*0.5); // Skriver "Game Over!" midt på skærmen
+  textSize(int((width+height)*0.0125));
+  text("Tryk 'r', ENTER eller på skærmen for at genstarte spillet", width*0.5, height*0.6);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -225,8 +213,9 @@ void spawnPoint() {
 //-------------------------------------------------------------------------------------------------------------
 
 void keyPressed() {
-  mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
-  mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
+
+  startScreen = false;
+  doNotMove();
 
   if (key == 'p' || key == 'P') { // Der trykkes på p og Spillet pauses
     if (pause && !inGame) { // Hvis man allerede er på pause
@@ -237,7 +226,7 @@ void keyPressed() {
     }
   } 
 
-  if (dead && key == ENTER) {
+  if (dead && key == ENTER || key == 'r' || key == 'R') {
     dead = false;
     frameCount = -1;
   }
@@ -252,16 +241,8 @@ void keyPressed() {
     }
 
     if (key == ENTER && pause) {
-      if (guess == result) {
-        player.score++;
-        player.zombie.noLimit *= 0.70;
-      } else if (guess != result) {
-        wrongAnswerRate += 0.05;
-        player.score--;
-        player.zombie.noLimit *= wrongAnswerRate;
-      }
-      mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
-      mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
+      checkGuessAndResult();
+      doNotMove();
       pause = false;
       guess = 0;
       breakTime = 1000;
@@ -286,6 +267,8 @@ void level() {
 //-------------------------------------------------------------------------------------------------------------
 
 void calculationScreen() {
+  ding.stop();
+  buzz.stop();
 
   rectMode(CORNER);
   noStroke();
@@ -314,6 +297,9 @@ void calculationScreen() {
   text("+", width*0.75, height*0.5);
   text("-", width*0.25, height*0.5);
   text("Enter", width*0.5, height*9/12);
+  textSize((width+height)*0.008);
+  text("(→)", width*0.75, height*0.55);
+  text("(←)", width*0.25, height*0.55);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -322,7 +308,7 @@ void slowZone() {
   float distPlayer = dist(lake.x, lake.y, player.pos.x, player.pos.y);
   float distZombie = dist(lake.x, lake.y, player.zombie.pos.x, player.zombie.pos.y);
   noFill();
-  image(lakeImage, lake.x, lake.y, lakeSize, lakeSize);
+  image(lakeImage, lake.x, lake.y);
   if (distPlayer < lakeSize*0.5 + player.size*0.5) {
     player.inMud = true;
   } else {
@@ -338,12 +324,60 @@ void slowZone() {
 
 //-------------------------------------------------------------------------------------------------------------
 
-
-void startScreen(){
-  startImage.resize(800,800);
+void startScreen() {
   background(startImage);
-  
-  // startskærm informationer
-  //fill(0);
-  //text("Tap to play",width*0.5,height*0.5);
 }
+
+//-------------------------------------------------------------------------------------------------------------
+
+void pauseScreen() {
+  image(background, width*0.5, height*0.5); // Sætter baggrund
+  slowZone(); // viser søen
+  player.display(); // Viser spilleren
+  player.zombie.display(); // Viser zombien
+  updatePoints();  // Updaterer pointene
+  textSize(int((width+height)*0.0625));
+  text("Pause", width*0.5, height*0.2); // Viser spillerens score
+  textSize(int((width+height)*0.01875));
+  text("Din score er: " + player.score, width*0.5, height*0.5); // Viser spillerens score
+  text("Du er på level: " + int(level+1), width*0.5, height*0.7); // Viser spillerens level
+  textSize(int((width+height)*0.0125));
+  text("Tryk 'p' for at afslutte pausen", width*0.5, height*0.3);
+  text("Tryk 'r' for at genstarte spillet", width*0.5, height*0.8);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+
+void checkGuessAndResult() {
+  if (guess == result) {
+    ding.play();
+    player.score++;
+    player.zombie.noLimit *= 0.70;
+  } else if (guess != result) {
+    buzz.play();
+    wrongAnswerRate += 0.05;
+    player.score--;
+    player.zombie.noLimit *= wrongAnswerRate;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------------------
+
+void doNotMove() {
+  mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
+  mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
+}
+
+//-------------------------------------------------------------------------------------------------------------
+
+void countDown() {
+  noStroke();
+  fill(255);
+  rectMode(CENTER);
+  rect(width*0.9, height*0.905, int((width+height)*0.03125), int((width+height)*0.03125), 10);
+  fill(0);
+  textSize(int((width+height)*0.03125));
+  text((int)map(breakTime, 0, 1000, 1, 10), width*0.9, height*0.9); // Display af tid til pausen slutter
+}
+
+//-------------------------------------------------------------------------------------------------------------
