@@ -1,8 +1,6 @@
 class Point{
 
   PVector pos;
-  //PVector vel;
-  //PVector acc;
   
   int size;
   
