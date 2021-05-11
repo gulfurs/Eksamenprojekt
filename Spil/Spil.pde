@@ -88,19 +88,19 @@ void setup() {
 void draw() {
 
   if (!startScreen) {
-    if (dead) {           // Hvis spilleren er død
-      endScreen();        // Viser slut skærmen
-    } else {              // Hvis spilleren er i live
+    if (dead) {                   // Hvis spilleren er død
+      endScreen();                // Viser slut skærmen
+    } else {                      // Hvis spilleren er i live
       if (pause) {        
-        if (inGame) {     // Hvis man er inden i spillet
+        if (inGame) {             // Hvis man er inden i spillet
           calculationScreen();
-        } else { // pause skærm
+        } else {                  // pause skærm
           pauseScreen();
         }
 
-        breakTime--;     // Nedsætting af pausetid
+        breakTime--;              // Nedsætting af pausetid
 
-        countDown();
+        countDown();              // Viser nedtæller
 
         if (breakTime<0) {
           doNotMove();
@@ -112,7 +112,7 @@ void draw() {
           breakTime = 1000;
           guess = 0;
         }
-      } else {           // Her er koden til selve spillet
+      } else {           // Her er koden til ingame i spillet
         image(background, width*0.5, height*0.5); // Sætter baggrund
         slowZone();
         fill(200);
@@ -305,7 +305,6 @@ void calculationScreen() {
 void slowZone() {
   float distPlayer = dist(lake.x, lake.y, player.pos.x, player.pos.y);
   float distZombie = dist(lake.x, lake.y, player.zombie.pos.x, player.zombie.pos.y);
-  noFill();
   image(lakeImage, lake.x, lake.y);
   if (distPlayer < lakeSize*0.5 + player.size*0.5) {
     player.inMud = true;
@@ -362,8 +361,8 @@ void checkGuessAndResult() {
 //-------------------------------------------------------------------------------------------------------------
 
 void doNotMove() {
-  mouseX = (int)player.pos.x; // Så bevæger man sig ikke efter man lige har svaret
-  mouseY = (int)player.pos.y; // Så bevæger man sig ikke efter man lige har svaret
+  mouseX = (int)player.pos.x; // Så bevæger man sig ikke 
+  mouseY = (int)player.pos.y; // Så bevæger man sig ikke 
 }
 
 //-------------------------------------------------------------------------------------------------------------
