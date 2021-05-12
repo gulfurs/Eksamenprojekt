@@ -150,7 +150,6 @@ void mousePressed() {
   }
   
   if (dead) {
-    dead = false;
     frameCount = -1;
   }
 

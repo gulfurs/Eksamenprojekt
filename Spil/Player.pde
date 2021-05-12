@@ -16,6 +16,7 @@ class Player {
   float mudLimit;
   float noLimit;
 
+
   Player() {
     zombie = new Zombie((int)random(width), (int)random(height));
 
