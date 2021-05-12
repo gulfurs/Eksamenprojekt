@@ -12,7 +12,7 @@ PImage lakeImage;
 PImage background;
 PImage pointImage;
 PImage playerImage;
-PImage startImage;
+PImage[] startImage;
 
 int count; // Bliver brugt til at spawne regnestykker
 int guess; // Det tal man gætter på når man skal regne et regnestykke
@@ -41,11 +41,15 @@ void setup() {
 
   imageMode(CENTER);
 
+  startImage = new PImage[3];  
+
   lakeImage = loadImage("data/Lake.png");
   background = loadImage("data/Background.png");
   pointImage = loadImage("data/Point.png");
   playerImage = loadImage("data/Player.png");
-  startImage = loadImage("data/Start.png");
+  startImage[0] = loadImage("data/StartScreen.png");
+  startImage[1] = loadImage("data/StartScreenExit.png");
+  startImage[2] = loadImage("data/StartScreenPlay.png");
 
   ding = new SoundFile(this, "data/Ding.mp3");
   buzz = new SoundFile(this, "data/Buzz.mp3");
@@ -68,7 +72,10 @@ void setup() {
 
   lakeSize = (int)random((width+height)*0.125, (width+height)*0.35);
   lakeImage.resize(lakeSize, lakeSize);
-  startImage.resize(width, height);
+  
+  for(int i = 0;i< startImage.length;i++){
+    startImage[i].resize(width, height);
+  }
 
   pause = false; 
   inGame = true;
@@ -87,7 +94,7 @@ void setup() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void draw() {
-
+  println(mouseX + ", " + mouseY);
   if (!startScreen) {
     if (dead) {                   // Hvis spilleren er død
       endScreen();                // Viser slut skærmen
@@ -137,7 +144,7 @@ void draw() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void mousePressed() {  
-  if (startScreen && mouseX > int((width+height)*0.140625) && mouseX < int((width+height)*0.365625) && mouseY > int((width+height)*0.34375) && mouseX < int((width+height)*0.375)) { // skal ændret til hvor exit knappen er
+  if (startScreen && mouseX > int((width+height)*0.140625) && mouseX < int((width+height)*0.365625) && mouseY > int((width+height)*0.34375) && mouseY < int((width+height)*0.375)) {
     exit();
   } else {
     startScreen = false;
@@ -212,7 +219,6 @@ void spawnPoint() {
 //-------------------------------------------------------------------------------------------------------------
 
 void keyPressed() {
-
   startScreen = false;
   doNotMove();
 
@@ -323,7 +329,13 @@ void slowZone() {
 //-------------------------------------------------------------------------------------------------------------
 
 void startScreen() {
-  background(startImage);
+  if (startScreen && mouseX > int((width+height)*0.140625) && mouseX < int((width+height)*0.365625) && mouseY > int((width+height)*0.34375) && mouseY < int((width+height)*0.375)) { 
+    background(startImage[1]);
+  } else if(startScreen && mouseX > int((width+height)*0.15625) && mouseX < int((width+height)*0.353125) && mouseY > int((width+height)*0.34375) && mouseY < int((width+height)*0.375)){
+    background(startImage[2]);
+  } else {
+    background(startImage[0]);
+  }
 }
 
 //-------------------------------------------------------------------------------------------------------------
