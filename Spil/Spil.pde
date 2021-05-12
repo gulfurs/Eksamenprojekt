@@ -48,7 +48,7 @@ void setup() {
   pointImage = loadImage("data/Point.png");
   playerImage = loadImage("data/Player.png");
   startImage[0] = loadImage("data/StartScreen.png");
-  startImage[1] = loadImage("data/StartScreenExit2.png");
+  startImage[1] = loadImage("data/StartScreenExit.png");
   startImage[2] = loadImage("data/StartScreenPlay.png");
 
   ding = new SoundFile(this, "data/Ding.mp3");
@@ -94,7 +94,6 @@ void setup() {
 //------------------------------------------------------------------------------------------------------------- 
 
 void draw() {
-  println(mouseX + ", " + mouseY);
   if (!startScreen) {
     if (dead) {                   // Hvis spilleren er død
       endScreen();                // Viser slut skærmen
