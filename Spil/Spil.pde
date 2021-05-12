@@ -146,9 +146,10 @@ void draw() {
 void mousePressed() {  
   if (startScreen && mouseX > int((width+height)*0.140625) && mouseX < int((width+height)*0.365625) && mouseY > int((width+height)*0.34375) && mouseY < int((width+height)*0.375)) {
     exit();
-  } else {
+  } else if(startScreen && mouseX > int((width+height)*0.15625) && mouseX < int((width+height)*0.353125) && mouseY > int((width+height)*0.15625) && mouseY < int((width+height)*0.1875)){
     startScreen = false;
   }
+  
   if (dead) {
     dead = false;
     frameCount = -1;
@@ -331,7 +332,7 @@ void slowZone() {
 void startScreen() {
   if (startScreen && mouseX > int((width+height)*0.140625) && mouseX < int((width+height)*0.365625) && mouseY > int((width+height)*0.34375) && mouseY < int((width+height)*0.375)) { 
     background(startImage[1]);
-  } else if(startScreen && mouseX > int((width+height)*0.15625) && mouseX < int((width+height)*0.353125) && mouseY > int((width+height)*0.34375) && mouseY < int((width+height)*0.375)){
+  } else if(startScreen && mouseX > int((width+height)*0.15625) && mouseX < int((width+height)*0.353125) && mouseY > int((width+height)*0.15625) && mouseY < int((width+height)*0.1875)){
     background(startImage[2]);
   } else {
     background(startImage[0]);
